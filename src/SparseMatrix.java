@@ -4,7 +4,7 @@ public interface SparseMatrix {
     int colCount();
     double get(int r, int c);
     void set(int r, int c, double element);
-    void zero(int r, int c);
+    void zero(int r, int c) throws IndexOutOfBoundsException;
     void clear();
     boolean isEmpty();
     String toString();
