@@ -29,11 +29,14 @@ public class SparseMatrixLIL implements SparseMatrix{
 
     @Override
     public double get(int r, int c) {
-       Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
-       ElementInfo res = new ElementInfo(c);
+        if(Math.abs(r) >= rows || Math.abs(c) >= columns){
+            throw new IndexOutOfBoundsException("Position: ("+r+", "+c+") out of bounds for "+rows+"x"+columns+" matrix (indexes start from 0).");
+        }
+        Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
+        ElementInfo res = new ElementInfo(c);
 
-       int curRow = 0;
-       while(it.hasNext()){
+        int curRow = 0;
+        while(it.hasNext()){
             var row =  it.next();
             if(curRow == r){
                 Iterator<ElementInfo> cols = row.iterator();
@@ -46,13 +49,16 @@ public class SparseMatrixLIL implements SparseMatrix{
                 break;
             }
             curRow+=1;
-       }
+        }
 
-       return res.val;
+        return res.val;
     }
 
     @Override
     public void set(int r, int c, double element) {
+        if(Math.abs(r) >= rows || Math.abs(c) >= columns){
+            throw new IndexOutOfBoundsException("Position: ("+r+", "+c+") out of bounds for "+rows+"x"+columns+" matrix (indexes start from 0).");
+        }
         Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
         int curRow = 0;
         ElementInfo toPut = new ElementInfo(c, element);
@@ -79,11 +85,8 @@ public class SparseMatrixLIL implements SparseMatrix{
 
     @Override
     public void zero(int r, int c) {
-        if(r > rows){
-            throw new IndexOutOfBoundsException("Row index: "+r+ " is out of bounds.");
-        }
-        if(c > columns){
-            throw new IndexOutOfBoundsException("Column index: "+c+" is out of bounds.");
+        if(Math.abs(r) >= rows || Math.abs(c) >= columns){
+            throw new IndexOutOfBoundsException("Position: ("+r+", "+c+") out of bounds for "+rows+"x"+columns+" matrix (indexes start from 0).");
         }
         Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
  
