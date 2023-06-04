@@ -1,5 +1,5 @@
 import java.util.TreeMap;
-
+//import java.math;
 public class SparseMatrixDOK implements SparseMatrix{
     private TreeMap<ElementPos, Double> matrix;
     private int rows, columns;
@@ -29,7 +29,7 @@ public class SparseMatrixDOK implements SparseMatrix{
     }
 
     @Override
-    public void set(int r, int c, double element) {
+    public void set(int r, int c, double element) throws IndexOutOfBoundsException {
         if(Math.abs(r) >= rows || Math.abs(c) >= columns){
             throw new IndexOutOfBoundsException("Position: ("+r+", "+c+") out of bounds for "+rows+"x"+columns+" matrix (indexes start from 0).");
         }

@@ -3,7 +3,7 @@ public interface SparseMatrix {
     int rowCount();
     int colCount();
     double get(int r, int c);
-    void set(int r, int c, double element);
+    void set(int r, int c, double element) throws IndexOutOfBoundsException;
     void zero(int r, int c) throws IndexOutOfBoundsException;
     void clear();
     boolean isEmpty();
