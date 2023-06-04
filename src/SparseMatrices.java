@@ -1,6 +1,6 @@
 public class SparseMatrices {
     public static SparseMatrix add(SparseMatrix a, SparseMatrix b){
-        SparseMatrix c = null;
+        SparseMatrix c;
         if(a.colCount() == b.colCount() && a.rowCount() == b.rowCount()){
             int rows = a.rowCount();
             int cols = a.colCount();
@@ -10,7 +10,11 @@ public class SparseMatrices {
                     c.set(i, j, a.get(i, j) + b.get(i, j));
                 }
             }
+            return c;
         }
-        return c;
+    else{
+        System.out.println("The dimencions of the Matrixes are not the same.");
+        return null;
+    }
     }
 }
