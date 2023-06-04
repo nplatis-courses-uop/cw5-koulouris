@@ -64,6 +64,13 @@ public class SparseMatrixLIL implements SparseMatrix{
         while(it.hasNext()){
             var row =  it.next();
             if(curRow == r){
+                //check if there is an element in position (r, c)
+                Iterator<ElementInfo> col = row.iterator();
+                while(col.hasNext()){
+                    if(col.next().c == c){
+                        col.remove();
+                    }
+                }
                 row.add(toPut);
             }
             curRow+=1;

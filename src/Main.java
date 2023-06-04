@@ -32,6 +32,7 @@ public class Main {
         b.set(1, 1, 2);
 
         SparseMatrix sum = SparseMatrices.add(a, b);
+        sum.set(0, 0, 0.000001);//won't print, is set to 0
         System.out.println(sum);
     }
 }
