@@ -30,7 +30,21 @@ public class Main {
         b.set(0, 1, 2);
         b.set(1, 0, 2);
         b.set(1, 1, 2);
-        SparseMatrix sum = SparseMatrices.add(a, b);
-        System.out.println(sum);
+        SparseMatrix sum1 = SparseMatrices.add(a, b);
+        System.out.println(sum1);
+        System.out.println("Flag1");
+
+        SparseMatrix c = new SparseMatrixDOK(2, 2);
+        for(int i = 0; i < 2; i++){
+            c.set(i, i, 9);
+        }
+
+        SparseMatrix d = new SparseMatrixDOK(3, 2);
+        d.set(0, 1, 8);
+        d.set(1, 0, 7);
+        d.set(1, 1, 10);
+        SparseMatrix sum2 = SparseMatrices.add(c, d);
+        System.out.println(sum2);
+        System.out.println("Flag2");
     }
 }
