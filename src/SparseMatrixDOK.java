@@ -1,12 +1,22 @@
 import java.util.TreeMap;
-//import java.math;
-public class SparseMatrixDOK implements SparseMatrix{
+public class SparseMatrixDOK /*extends ElementPos*/ implements SparseMatrix{
     private TreeMap<ElementPos, Double> matrix;
     private int rows, columns;
-
+    private ElementPos z=new ElementPos(0,0);
+    /**
+     * @param r
+     * @param c
+     */
     public SparseMatrixDOK(int r, int c){
-        rows = r;
-        columns = c;
+       // super(0, 0);//ElementPos Object Create
+       matrix=new TreeMap<>();
+        for(int i = 0; i < r; i++){
+            for(int j=0;j < c;j++){
+                matrix.put(z.setElementPos(r,c), 0.0);
+            }
+        }
+        rows=r;
+        columns=c;
     }
     @Override
     public int rowCount() {
@@ -17,14 +27,20 @@ public class SparseMatrixDOK implements SparseMatrix{
     public int colCount() {
         return columns;
     }
-
+    public void setElementPos(int x,int y){
+        z.setRow(x);
+        z.setColumn(y);
+    }
+    public ElementPos getElementPos(){
+        return z;
+    }
     @Override
     public double get(int r, int c) {
         if(Math.abs(r) >= rows || Math.abs(c) >= columns){
             throw new IndexOutOfBoundsException("Position: ("+r+", "+c+") out of bounds for "+rows+"x"+columns+" matrix (indexes start from 0).");
         }
-        double res = 0;
-        //get double value with key ElementPos(r, c) and assign it to res
+        double res;
+        res=matrix.getOrDefault(z, null);
         return res;
     }
 
@@ -33,8 +49,14 @@ public class SparseMatrixDOK implements SparseMatrix{
         if(Math.abs(r) >= rows || Math.abs(c) >= columns){
             throw new IndexOutOfBoundsException("Position: ("+r+", "+c+") out of bounds for "+rows+"x"+columns+" matrix (indexes start from 0).");
         }
-        
         //use matrix.put, after making a new ElementPos, check if the position already has an element, you need to remove it first then put the new one.
+        ElementPos newPos=new ElementPos(r,c);
+        if(matrix.ceilingEntry(newPos)!=null){
+            matrix.replace(newPos, element);
+        }
+        else{
+            matrix.put(newPos, element);
+        }
     }
 
     @Override
@@ -44,6 +66,13 @@ public class SparseMatrixDOK implements SparseMatrix{
         }
         
         //get the ElementPos with values r,c from the matrix and use matrix.remove(ElementPos key)
+        ElementPos newPos=new ElementPos(r,c);
+        if(matrix.ceilingEntry(newPos)!=null){
+            matrix.replace(newPos, 0.0);
+        }
+        else{
+            matrix.put(newPos, 0.0);
+        }
     }
 
     @Override
@@ -62,6 +91,16 @@ public class SparseMatrixDOK implements SparseMatrix{
         private ElementPos(int r, int c){
             this.r = r;
             this.c = c;
+        }
+
+        public SparseMatrixDOK.ElementPos setElementPos(int r2, int c2) {
+            return null;
+        }
+
+        public void setRow(int x) {
+        }
+
+        public void setColumn(int y) {
         }
 
         @Override
