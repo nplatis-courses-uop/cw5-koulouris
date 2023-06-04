@@ -8,13 +8,12 @@ public class SparseMatrixLIL implements SparseMatrix{
 
     private List<TreeMap<Integer, Double>> matrix;
     private int rows, columns;
-    private ElementInfo elInf;
+    private ElementInfo[] elInf;
 
     public SparseMatrixLIL(int r, int c){
         matrix = new LinkedList<>();
         for(int i = 0; i < r; i++){
             matrix.add(new TreeMap<>());
-            
         }
         rows = r;
         columns = c;
