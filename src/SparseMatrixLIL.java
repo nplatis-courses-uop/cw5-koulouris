@@ -1,19 +1,20 @@
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SparseMatrixLIL implements SparseMatrix{
 
-    private List<TreeMap<Integer, Double>> matrix;
+    private List<TreeSet<ElementInfo>> matrix;
     private int rows, columns;
-    private ElementInfo[] elInf;
 
     public SparseMatrixLIL(int r, int c){
         matrix = new LinkedList<>();
         for(int i = 0; i < r; i++){
-            matrix.add(new TreeMap<>());
+            matrix.add(new TreeSet<>());
         }
         rows = r;
         columns = c;
@@ -31,28 +32,33 @@ public class SparseMatrixLIL implements SparseMatrix{
 
     @Override
     public double get(int r, int c) {
-       Iterator<TreeMap<Integer, Double>> it = matrix.iterator();
-       double res = 0;
+       Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
+       ElementInfo res = new ElementInfo(c);
 
        int curRow = 0;
        while(it.hasNext()){
             var row =  it.next();
             if(curRow == r){
-                if(row.get(c) != null){
-                    res = row.get(c);
+                Iterator<ElementInfo> cols = row.iterator();
+                while(cols.hasNext()){
+                    ElementInfo tmp = cols.next();
+                    if(tmp.c == c){
+                        res = tmp;
+                    }
                 }
                 break;
             }
             curRow+=1;
        }
 
-       return res;
+       return res.val;
     }
 
     @Override
     public void set(int r, int c, double element) {
-        Iterator<TreeMap<Integer, Double>> it = matrix.iterator();
+        Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
         int curRow = 0;
+        ElementInfo toPut = new ElementInfo(c, element);
 
         if(Math.abs(element) < 1e-5){
             zero(r, c);
@@ -61,7 +67,7 @@ public class SparseMatrixLIL implements SparseMatrix{
         while(it.hasNext()){
             var row =  it.next();
             if(curRow == r){
-                row.put(c, element);
+                row.add(toPut);
             }
             curRow+=1;
         }
@@ -75,14 +81,17 @@ public class SparseMatrixLIL implements SparseMatrix{
         if(c > columns){
             throw new IndexOutOfBoundsException("Column index: "+c+" is out of bounds.");
         }
-        Iterator<TreeMap<Integer, Double>> it = matrix.iterator();
+        Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
  
         int curRow = 0;
         while(it.hasNext()){
             var row =  it.next();
             if(curRow == r){
-                if(row.remove(c) == null){
-                    //System.out.println("Element at: ("+r+", "+c+") is already zero.");
+                Iterator<ElementInfo> cols = row.iterator();
+                while(cols.hasNext()){
+                    if(cols.next().c == c){
+                        cols.remove();
+                    }
                 }
                 break;
             }
@@ -92,20 +101,26 @@ public class SparseMatrixLIL implements SparseMatrix{
 
     @Override
     public void clear() {
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < columns; j++){
-                zero(i, j);
+        Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
+
+        while(it.hasNext()){
+            var row = it.next();
+            Iterator<ElementInfo> cols = row.iterator();
+            while(cols.hasNext()){
+                cols.next();
+                cols.remove();
             }
         }
+ 
     }
 
     @Override
     public boolean isEmpty() {
-        Iterator<TreeMap<Integer, Double>> it = matrix.iterator();
-
-        while(it.hasNext()){
-            var row =  it.next();
-            if(row.isEmpty() == false){
+       Iterator<TreeSet<ElementInfo>> rows = matrix.iterator();
+        while(rows.hasNext()){
+            var row = rows.next();
+            Iterator<ElementInfo> cols = row.iterator();
+            if(cols.hasNext()){
                 return false;
             }
         }
@@ -115,13 +130,15 @@ public class SparseMatrixLIL implements SparseMatrix{
     public String toString(){
         String res="[ ";
 
-        Iterator<TreeMap<Integer, Double>> it = matrix.iterator();
+        Iterator<TreeSet<ElementInfo>> it = matrix.iterator();
         int curRow = 0;
         while(it.hasNext()){
             var row = it.next();
-            Set<Integer> cols = row.keySet();
-            for(Integer i: cols){
-                res += "("+curRow+", "+i+": "+row.get(i)+") ";
+            Iterator<ElementInfo> cols = row.iterator();
+            while(cols.hasNext()){
+                //never reaches here
+                ElementInfo tmp = cols.next();
+                res += "("+curRow+", "+tmp.c+": "+tmp.val+") ";
             }
             curRow++;
         }
@@ -129,13 +146,21 @@ public class SparseMatrixLIL implements SparseMatrix{
         return res;
     }
     
-    private class ElementInfo{
+    private class ElementInfo implements Comparable<ElementInfo>{
         private int c;
         private double  val;
 
-        public ElementInfo(int c, double val){
+        private ElementInfo(int c, double val){
             this.c = c;
             this.val = val;
+        }
+        private ElementInfo(int c){
+            val = 0;
+            this.c = c;
+        }
+        @Override
+        public int compareTo(ElementInfo o) {
+            return this.c - o.c;
         }
     }
 }
