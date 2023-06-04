@@ -19,5 +19,19 @@ public class Main {
         System.out.println(SM);
         SM.clear();
         System.out.println(SM);
+
+        //SparseMatrices test
+        System.out.println();
+        SparseMatrix a = new SparseMatrixLIL(2, 2);
+        for(int i = 0; i < 2; i++){
+            a.set(i, i, 2);
+        }
+        SparseMatrix b = new SparseMatrixLIL(2, 2);
+        b.set(0, 1, 2);
+        b.set(1, 0, 2);
+        b.set(1, 1, 2);
+
+        SparseMatrix sum = SparseMatrices.add(a, b);
+        System.out.println(sum);
     }
 }
