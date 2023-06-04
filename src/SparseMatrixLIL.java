@@ -55,6 +55,10 @@ public class SparseMatrixLIL implements SparseMatrix{
         Iterator<TreeMap<Integer, Double>> it = matrix.iterator();
         int curRow = 0;
 
+        if(Math.abs(element) < 1e-5){
+            zero(r, c);
+            return;
+        }
         while(it.hasNext()){
             var row =  it.next();
             if(curRow == r){
