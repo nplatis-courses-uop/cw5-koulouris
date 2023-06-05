@@ -8,13 +8,7 @@ public class SparseMatrixDOK /*extends ElementPos*/ implements SparseMatrix{
      * @param c
      */
     public SparseMatrixDOK(int r, int c){
-       // super(0, 0);//ElementPos Object Create
-       matrix=new TreeMap<>();
-        for(int i = 0; i < r; i++){
-            for(int j=0;j < c;j++){
-                matrix.put(z.setElementPos(r,c), 0.0);
-            }
-        }
+        matrix=new TreeMap<>();
         rows=r;
         columns=c;
     }
@@ -27,20 +21,15 @@ public class SparseMatrixDOK /*extends ElementPos*/ implements SparseMatrix{
     public int colCount() {
         return columns;
     }
-    public void setElementPos(int x,int y){
-        z.setRow(x);
-        z.setColumn(y);
-    }
-    public ElementPos getElementPos(){
-        return z;
-    }
     @Override
     public double get(int r, int c) {
         if(Math.abs(r) >= rows || Math.abs(c) >= columns){
             throw new IndexOutOfBoundsException("Position: ("+r+", "+c+") out of bounds for "+rows+"x"+columns+" matrix (indexes start from 0).");
         }
         double res;
-        res=matrix.getOrDefault(z, null);
+        z.c = c;
+        z.r = r;
+        res=matrix.getOrDefault(z, (double) 0);
         return res;
     }
 
@@ -67,12 +56,7 @@ public class SparseMatrixDOK /*extends ElementPos*/ implements SparseMatrix{
         
         //get the ElementPos with values r,c from the matrix and use matrix.remove(ElementPos key)
         ElementPos newPos=new ElementPos(r,c);
-        if(matrix.ceilingEntry(newPos)!=null){
-            matrix.replace(newPos, 0.0);
-        }
-        else{
-            matrix.put(newPos, 0.0);
-        }
+        matrix.remove(newPos);
     }
 
     @Override
@@ -91,16 +75,6 @@ public class SparseMatrixDOK /*extends ElementPos*/ implements SparseMatrix{
         private ElementPos(int r, int c){
             this.r = r;
             this.c = c;
-        }
-
-        public SparseMatrixDOK.ElementPos setElementPos(int r2, int c2) {
-            return null;
-        }
-
-        public void setRow(int x) {
-        }
-
-        public void setColumn(int y) {
         }
 
         @Override

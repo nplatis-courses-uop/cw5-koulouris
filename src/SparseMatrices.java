@@ -13,7 +13,7 @@ public class SparseMatrices {
             return c;
         }
     else{
-        System.out.println("The dimencions of the Matrixes are not the same.");
+        System.out.println("The dimensions of the Matrices are not the same.");
         return null;
     }
     }
