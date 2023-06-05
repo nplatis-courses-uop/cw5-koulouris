@@ -38,6 +38,7 @@ public class Main {
         for(int i = 0; i < 2; i++){
             c.set(i, i, 9);
         }
+        System.out.println(c.get(1, 0));
 
         SparseMatrix d = new SparseMatrixDOK(3, 2);
         d.set(0, 1, 8);
