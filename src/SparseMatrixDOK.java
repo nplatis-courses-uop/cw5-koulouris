@@ -63,6 +63,25 @@ public class SparseMatrixDOK /*extends ElementPos*/ implements SparseMatrix{
     public void clear() {
         matrix.clear();
     }
+     
+    @Override
+            public String toString(){
+                    Set mtrx=matrix.entrySet();
+                            String res="[ ";
+                                    Iterator<Set<ElementPos>> it = mtrx.iterator();
+                                            int curRow = 0;
+                                                    while(it.hasNext()){
+                                                                var row = it.next();
+                                                                            Iterator<ElementPos> cols = row.iterator();
+                                                                                        while(cols.hasNext()){
+                                                                                                        ElementPos tmp = cols.next();
+                                                                                                                        res += "("+curRow+", "+tmp.c+": "+matrix.get(tmp)+") ";
+                                                                                                                                    }
+                                                                                                                                                curRow++;
+                                                                                                                                                        }
+                                                                                                                                                                res +="]";
+                                                                                                                                                                        return res;
+                                                                                                                                                                                }
 
     @Override
     public boolean isEmpty() {
